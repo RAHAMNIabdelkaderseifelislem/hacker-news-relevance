@@ -4,14 +4,18 @@ import axios from 'axios';
 function App() {
   const [bio, setBio] = useState('');
   const [stories, setStories] = useState([]);
+  const [loading, setLoading] = useState(false); // Add loading state
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true); // Set loading to true when submitting
     try {
-      const response = await axios.post('http://localhost:8000/rank-stories', { bio });
+      const response = await axios.post('http://127.0.0.1:8000/rank-stories', { bio });
       setStories(response.data.ranked_stories);
     } catch (error) {
       console.error('Error ranking stories:', error);
+    } finally {
+      setLoading(false); // Set loading to false after the request completes
     }
   };
 
@@ -24,9 +28,13 @@ function App() {
           value={bio}
           onChange={(e) => setBio(e.target.value)}
           placeholder="Enter your bio..."
+          disabled={loading} // Disable textarea when loading
         />
-        <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">Submit</button>
+        <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded" disabled={loading}>
+          {loading ? 'Loading...' : 'Submit'}
+        </button>
       </form>
+      {loading && <div className="mt-4 h-1 bg-blue-500 w-full animate-pulse"></div>} {/* Show loader */}
       <div className="mt-4">
         <h2 className="text-xl font-bold mb-2">Ranked Stories</h2>
         <ul>
