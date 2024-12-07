@@ -1,9 +1,13 @@
+import requests
+import spacy
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-import requests
-import spacy
 from typing import List, Tuple
+import logging
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 app = FastAPI()
 
@@ -19,7 +23,16 @@ class UserBio(BaseModel):
     bio: str
 
 HACKER_NEWS_API = "https://hacker-news.firebaseio.com/v0/"
-nlp = spacy.load("en_core_web_sm")
+
+# Check if the model is already downloaded, if not, download it
+try:
+    nlp = spacy.load("en_core_web_sm")
+    logger.info("Model 'en_core_web_sm' is already downloaded.")
+except OSError:
+    logger.info("Model 'en_core_web_sm' is not downloaded. Downloading now...")
+    from spacy.cli import download
+    download("en_core_web_sm")
+    nlp = spacy.load("en_core_web_sm")
 
 def fetch_top_stories() -> List[int]:
     response = requests.get(f"{HACKER_NEWS_API}topstories.json")
@@ -46,6 +59,8 @@ def rank_stories_by_relevance(user_bio: str, top_story_ids: List[int]) -> List[T
 
 @app.post("/rank-stories")
 async def rank_stories(user_bio: UserBio):
+    logger.info("Received bio: %s", user_bio.bio)
     top_story_ids = fetch_top_stories()
     ranked_stories = rank_stories_by_relevance(user_bio.bio, top_story_ids)
+    logger.info("Ranked stories: %s", ranked_stories)
     return {"ranked_stories": ranked_stories}
