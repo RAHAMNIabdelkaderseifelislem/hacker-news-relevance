@@ -7,8 +7,12 @@ function App() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const response = await axios.post('http://localhost:8000/rank-stories', { bio });
-    setStories(response.data.ranked_stories);
+    try {
+      const response = await axios.post('http://localhost:8000/rank-stories', { bio });
+      setStories(response.data.ranked_stories);
+    } catch (error) {
+      console.error('Error ranking stories:', error);
+    }
   };
 
   return (
@@ -28,8 +32,8 @@ function App() {
         <ul>
           {stories.map((story, index) => (
             <li key={index} className="mb-2">
-              <a href={`https://news.ycombinator.com/item?id=${story[0]}`} target="_blank" rel="noopener noreferrer">
-                Story {index + 1}
+              <a href={`https://news.ycombinator.com/item?id=${story[0]}`} target="_blank" rel="noopener noreferrer" className="text-blue-500">
+                Story {index + 1} (Score: {story[1]})
               </a>
             </li>
           ))}
