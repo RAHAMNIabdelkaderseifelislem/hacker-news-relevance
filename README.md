@@ -30,3 +30,22 @@ This project builds an API that ranks the top 500 stories from the Hacker News f
 ## Deployment
 - **Backend:** Deploy on Render.
 - **Frontend:** Deploy on Vercel.
+
+## Thought Process and Decisions
+
+### Backend
+- **FastAPI:** Chosen for its simplicity and performance. It allows for quick development and easy deployment.
+- **requests:** Used for making API calls to the Hacker News API.
+- **spacy:** Chosen for its powerful NLP capabilities, making it easy to process and analyze text.
+
+### Frontend
+- **React:** Chosen for its component-based architecture and ease of use.
+- **Tailwind CSS:** Chosen for its utility-first CSS framework, allowing for quick and responsive styling.
+
+### Deployment
+- **Render:** Chosen for its ease of use and quick deployment for the backend.
+- **Vercel:** Chosen for its seamless integration with React and quick deployment for the frontend.
+
+### Optimizations
+- Limited the number of top stories to 500 to optimize performance.
+- Used basic keyword matching for relevance ranking to keep the implementation simple and quick.
