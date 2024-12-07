@@ -10,7 +10,7 @@ function App() {
     e.preventDefault();
     setLoading(true); // Set loading to true when submitting
     try {
-      const response = await axios.post('http://127.0.0.1:8000/rank-stories', { bio });
+      const response = await axios.post('https://hacker-news-relevance.onrender.com/rank-stories', { bio });
       setStories(response.data.ranked_stories);
     } catch (error) {
       console.error('Error ranking stories:', error);
